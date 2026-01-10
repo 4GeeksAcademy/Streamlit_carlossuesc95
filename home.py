@@ -73,20 +73,20 @@ if opcion == "Bitcoin":
     # Rentabilidad 5 años (1800 días)
     r1800=(df_btc_filt['Close'].iloc[-1]-df_btc_filt['Close'].iloc[-1800])/df_btc_filt['Close'].iloc[-1800]*100
 
-    st.write("Haz seleccionado:", option)
-    #Mostramos resultado en una columna
-    col = st.columns(1)
-    if option=="1 mes":
+st.write("Haz seleccionado:", option)
+        #Mostramos resultado en una columna
+col = st.columns(1)
+if option=="1 mes":
+           with col:
+                st.metric(value=f'{round(r30,2)} %')
+elif option=="1 año":
+     with col:
+          st.metric(value=f'{round(r360,2)} %')  
+else:                             
         with col:
-            st.metric(value=f'{round(r30,2)} %')
-    elif option=="1 año":
-        with col:
-            st.metric(value=f'{round(r360,2)} %')
-    else:
-        with col:
-            st.metric(value=f'{round(r1800,2)} %')
+             st.metric(value=f'{round(r1800,2)} %')
 if __name__ == "__main__":
-    main()
+     main()
 
 
 
