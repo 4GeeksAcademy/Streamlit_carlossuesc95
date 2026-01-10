@@ -1,13 +1,14 @@
 import streamlit as st
 import yfinance as yf
 
-#@st.cache_data
+@st.cache_data
 
-
-st.set_page_config(page_title="Predicción de activos", page_icon="💲", layout="centered")
-st.title("Predicción de criptoactivos")
-st.write("A través de esta app podrás estar al día de la información de diversos criptoactivos y,además, realizar predicciones sobre su cotización futura")
-st.write("**¿Qué tipo de información quiere?**")
+def main():
+    st
+    st.set_page_config(page_title="Predicción de activos", page_icon="💲", layout="centered")
+    st.title("Predicción de criptoactivos")
+    st.write("A través de esta app podrás estar al día de la información de diversos criptoactivos y,además, realizar predicciones sobre su cotización futura")
+    st.write("**¿Qué tipo de información quiere?**")
 #Espacio entre las opciones
 ''
 ''
@@ -72,20 +73,20 @@ if opcion == "Bitcoin":
     # Rentabilidad 5 años (1800 días)
     r1800=(df_btc_filt['Close'].iloc[-1]-df_btc_filt['Close'].iloc[-1800])/df_btc_filt['Close'].iloc[-1800]*100
 
-    st.write("Haz seleccionado:", option)
+st.write("Haz seleccionado:", option)
         #Mostramos resultado en una columna
-    col = st.columns(1)
-    if option=="1 mes":
+col = st.columns(1)
+if option=="1 mes":
+           with col:
+                st.metric(value=f'{round(r30,2)} %')
+elif option=="1 año":
+     with col:
+          st.metric(value=f'{round(r360,2)} %')  
+else:                             
         with col:
-            st.metric(value=f'{round(r30,2)} %')
-    elif option=="1 año":
-        with col:
-            st.metric(value=f'{round(r360,2)} %')  
-    else:
-        with col:
-            st.metric(value=f'{round(r1800,2)} %')
-    # if __name__ == "__main__":
-    #  main()
+             st.metric(value=f'{round(r1800,2)} %')
+if __name__ == "__main__":
+     main()
 
 
 
