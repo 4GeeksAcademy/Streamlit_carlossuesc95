@@ -11,8 +11,7 @@ def main():
     st.write("**¿Qué tipo de información quiere?**")
     ''
     ''
-
-    #Opcione
+    #Opciones
     opcion = st.radio(
         "Seleccione el criptoactivo a analizar"
         ("Bitcoin", "Ethereum"), index=None)
