@@ -1,4 +1,4 @@
-
+import pandas as pd
 import streamlit as st
 import yfinance as yf
 
@@ -21,7 +21,7 @@ if opcion == "Bitcoin":
 
     #Crea un control deslizante para elegir el rango de años
     #btc_min, btc_max = df_btc.index.min(), df_btc.index.max()
-    btc_min, btc_max = df_btc.index.min().date(), df_btc.index.max().date()
+    btc_min, btc_max = df_btc.index.min().to_pydatetime(), df_btc.index.max().to_pydatetime()
     fecha_inicio, fecha_fin = st.slider(
         'Seleccione las fechas de estudio',
         min_value=btc_min,
@@ -32,7 +32,7 @@ if opcion == "Bitcoin":
     ''
 
     # Filtra el DataFrame original basándose en lo que el usuario eligió en los widgets
-    df_btc_filt = df_btc[(df_btc.index >= fecha_inicio) & (df_btc.index <= fecha_fin)]
+    df_btc_filt = df_btc[(df_btc.index >= pd.Timestamp(fecha_inicio)) & (df_btc.index <= pd.Timestamp(fecha_fin))]
 
     # Crea un encabezado de sección con una línea divisoria gris
     st.header('Cotización bursatil de Bitcoin (USD)', divider='gray')
@@ -72,8 +72,72 @@ if opcion == "Bitcoin":
 
     col = st.columns(1)
     if option == "1 mes":
-        st.metric(value=f'{round(r30,2)} %')
+        st.metric(label="Rentabilidad", value=f'{round(r30,2)} %')
     elif option == "1 año":
-        st.metric(value=f'{round(r360,2)} %')
+        st.metric(label="Rentabilidad", value=f'{round(r360,2)} %')
     else:
-        st.metric(value=f'{round(r1800,2)} %')
+        st.metric(label="Rentabilidad", value=f'{round(r1800,2)} %')
+
+
+
+
+if opcion == "Ethereum":
+        ticker = yf.Ticker("ETH-USD")
+        df_eth = ticker.history(period="max")[["Close"]]
+
+        #Crea un control deslizante para elegir el rango de años
+        eth_min, eth_max = df_eth.index.min().to_pydatetime(), df_eth.index.max().to_pydatetime()
+        fecha_inicio, fecha_fin = st.slider(
+            'Seleccione las fechas de estudio',
+            min_value=eth_min,
+            max_value=eth_max,
+            value=(eth_min, eth_max)
+        )
+        ''
+        ''
+        ''
+
+        # Filtra el DataFrame original basándose en lo que el usuario eligió en los widgets
+        df_eth_filt = df_eth[(df_eth.index >= pd.Timestamp(fecha_inicio)) & (df_eth.index <= pd.Timestamp(fecha_fin))]
+
+        # Crea un encabezado de sección con una línea divisoria gris
+        st.header('Cotización bursatil de Ethereum (USD)', divider='gray')
+        ''
+
+        # Dibuja un gráfico de líneas interactivo usando el DataFrame filtrado
+        st.line_chart(df_eth_filt.reset_index(), x='Date', y='Close')
+        ''
+        ''
+
+        # Crea un encabezado de sección con una línea divisoria gris
+        st.header('Métricas básicas', divider='gray')
+        ''
+
+        # Crea 3 columnas físicas para mostrar los datos en paralelo (horizontal)
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            st.metric(label="Precio Actual", value=f'{round(df_eth_filt["Close"].iloc[-1],2)} $')
+        with col2:
+            st.metric(label="Capitalización de mercado", value=f'{round(ticker.info["marketCap"]/1e9,3)} B$')
+        with col3:
+            st.metric(label="Volumen (24h)", value=f'{round(ticker.info["volume24Hr"]/1e9,3)} B$')
+        ''
+        ''
+
+        #Seleccionar rentabilidad
+        option = st.selectbox("Seleccione el periodo de rentabilidad", ("1 mes", "1 año", "5 años"))
+
+        #Calculo de los valores
+        r30 = (df_eth_filt['Close'].iloc[-1] - df_eth_filt['Close'].iloc[-30]) / df_eth_filt['Close'].iloc[-30] * 100
+        r360 = (df_eth_filt['Close'].iloc[-1] - df_eth_filt['Close'].iloc[-360]) / df_eth_filt['Close'].iloc[-360] * 100
+        r1800 = (df_eth_filt['Close'].iloc[-1] - df_eth_filt['Close'].iloc[-1800]) / df_eth_filt['Close'].iloc[-1800] * 100
+
+        st.write("Haz seleccionado:", option)
+
+        col = st.columns(1)
+        if option == "1 mes":
+            st.metric(label="Rentabilidad", value=f'{round(r30,2)} %')
+        elif option == "1 año":
+            st.metric(label="Rentabilidad", value=f'{round(r360,2)} %')
+        else:
+            st.metric(label="Rentabilidad", value=f'{round(r1800,2)} %')
