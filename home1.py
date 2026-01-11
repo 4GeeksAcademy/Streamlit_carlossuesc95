@@ -8,12 +8,10 @@ st.title("Predicción de criptoactivos")
 st.write("A través de esta app podrás estar al día de la información de diversos criptoactivos y,además, realizar predicciones sobre su cotización futura")
 st.write("**¿Qué tipo de información quiere?**")
 ''
-''
-
 #Opciones
 
 opcion = st.radio(
-    "Seleccione el criptoactivo a analizar"
+    "Seleccione el criptoactivo a analizar",
     ("Bitcoin", "Ethereum"), index=None)
 
 ##Clica en BTC
@@ -22,14 +20,13 @@ if opcion == "Bitcoin":
     df_btc = ticker.history(period="max")[["Close"]]
 
     #Crea un control deslizante para elegir el rango de años
-    btc_min, btc_max = df_btc.index.min(), df_btc.index.max()
+    #btc_min, btc_max = df_btc.index.min(), df_btc.index.max()
+    btc_min, btc_max = df_btc.index.min().date(), df_btc.index.max().date()
     fecha_inicio, fecha_fin = st.slider(
         'Seleccione las fechas de estudio',
         min_value=btc_min,
         max_value=btc_max,
-        value=(btc_min, btc_max)
-    )
-
+        value=(btc_min, btc_max))
     ''
     ''
     ''
